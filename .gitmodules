@@ -1,3 +1,3 @@
 [submodule "lvprog/drivers/Quatsch_driver"]
 	path = lvprog/drivers/Quatsch_driver
-	url = git@gitlab.com:KaeroDot/Quatsch_driver.git
+	url = https://gitlab.com/KaeroDot/Quatsch_driver.git
