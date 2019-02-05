@@ -141,6 +141,7 @@
 			<Item Name="AWG.lvlib" Type="Library" URL="../drivers/AWG/AWG.lvlib"/>
 			<Item Name="Counter.lvlib" Type="Library" URL="../drivers/Counter/Counter.lvlib"/>
 			<Item Name="3458A Virtual Digitizer.lvlib" Type="Library" URL="../drivers/DMM/3458A Virtual Digitizer.lvlib"/>
+			<Item Name="QuADC Virtual Digitizer.lvlib" Type="Library" URL="../drivers/Quatsch_driver/QuADCDriver/QuADC Virtual Digitizer.lvlib"/>
 		</Item>
 		<Item Name="octave" Type="Folder">
 			<Item Name="mat" Type="Folder">
