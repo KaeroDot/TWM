@@ -1,3 +1,4 @@
 [submodule "lvprog/drivers/Quatsch_driver"]
 	path = lvprog/drivers/Quatsch_driver
 	url = https://gitlab.com/KaeroDot/Quatsch_driver.git
+	branch = master
