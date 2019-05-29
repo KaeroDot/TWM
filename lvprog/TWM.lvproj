@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='UTF-8'?>
-<Project Type="Project" LVVersion="13008000">
+<Project Type="Project" LVVersion="18008000">
 	<Property Name="CCSymbols" Type="Str">w_niscope,1;w_visa,1;</Property>
 	<Property Name="NI.LV.All.SourceOnly" Type="Bool">false</Property>
 	<Property Name="NI.Project.Description" Type="Str"></Property>
@@ -54,81 +54,9 @@
 		</Item>
 		<Item Name="drivers" Type="Folder">
 			<Item Name="dsdll" Type="Folder">
-				<Item Name="dsdll.lvlibp" Type="LVLibp" URL="../drivers/dsdll/dsdll.lvlibp">
-					<Item Name="private" Type="Folder">
-						<Item Name="dsdll_get_exe_path.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/dsdll_get_exe_path.vi"/>
-						<Item Name="dsdll_check_instance.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/dsdll_check_instance.vi"/>
-						<Item Name="dsdll_generate_error.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/dsdll_generate_error.vi"/>
-						<Item Name="dsdll_enumerate_devices_querry_list.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/dsdll_enumerate_devices_querry_list.vi"/>
-						<Item Name="dsdll_output_write_byte_array.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/output/dsdll_output_write_byte_array.vi"/>
-						<Item Name="dsdll_output_write_int16.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/output/dsdll_output_write_int16.vi"/>
-						<Item Name="dsdll_output_write_float32.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/output/dsdll_output_write_float32.vi"/>
-						<Item Name="dsdll_output_write_auto_float32.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/output/dsdll_output_write_auto_float32.vi"/>
-						<Item Name="dsdll_capture_wave_byte_array.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/capture/dsdll_capture_wave_byte_array.vi"/>
-						<Item Name="dsdll_capture_wave_variant.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/capture/dsdll_capture_wave_variant.vi"/>
-						<Item Name="dsdll_capture_wave_int16.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/capture/dsdll_capture_wave_int16.vi"/>
-						<Item Name="dsdll_capture_wave_float32.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/capture/dsdll_capture_wave_float32.vi"/>
-						<Item Name="dsdll_capture_wave_auto_float32.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/capture/dsdll_capture_wave_auto_float32.vi"/>
-					</Item>
-					<Item Name="capture" Type="Folder">
-						<Item Name="dsdll_capture_get_size.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/capture/dsdll_capture_get_size.vi"/>
-						<Item Name="dsdll_capture_wave.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/capture/dsdll_capture_wave.vi"/>
-						<Item Name="dsdll_capture_wave_abort.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/capture/dsdll_capture_wave_abort.vi"/>
-						<Item Name="dsdll_capture_wave_get_status.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/capture/dsdll_capture_wave_get_status.vi"/>
-					</Item>
-					<Item Name="output" Type="Folder">
-						<Item Name="dsdll_output_write.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/output/dsdll_output_write.vi"/>
-						<Item Name="dsdll_output_play.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/output/dsdll_output_play.vi"/>
-						<Item Name="dsdll_output_stop.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/output/dsdll_output_stop.vi"/>
-						<Item Name="dsdll_output_set_volume.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/output/dsdll_output_set_volume.vi"/>
-						<Item Name="dsdll_output_status.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/output/dsdll_output_status.vi"/>
-					</Item>
-					<Item Name="control" Type="Folder">
-						<Item Name="dsdll_initialize.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/control/dsdll_initialize.vi"/>
-						<Item Name="dsdll_get_dll_version_string.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/control/dsdll_get_dll_version_string.vi"/>
-						<Item Name="dsdll_enumerate_devices.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/control/dsdll_enumerate_devices.vi"/>
-						<Item Name="dsdll_open.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/control/dsdll_open.vi"/>
-						<Item Name="dsdll_close.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/control/dsdll_close.vi"/>
-						<Item Name="dsdll_config.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/control/dsdll_config.vi"/>
-						<Item Name="dsdll_status.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/control/dsdll_status.vi"/>
-					</Item>
-					<Item Name="demo" Type="Folder">
-						<Item Name="other" Type="Folder">
-							<Item Name="gen_coherent_sine.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/demos/other/gen_coherent_sine.vi"/>
-							<Item Name="Get App Version.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/demos/other/Get App Version.vi"/>
-							<Item Name="control_enabled_state.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/demos/other/control_enabled_state.vi"/>
-							<Item Name="randn_approximation.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/demos/other/randn_approximation.vi"/>
-							<Item Name="simple_FFT.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/demos/other/simple_FFT.vi"/>
-						</Item>
-						<Item Name="dsdll_basic_demo.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/demos/dsdll_basic_demo.vi"/>
-						<Item Name="dsdll_signal_demo.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/demos/dsdll_signal_demo.vi"/>
-						<Item Name="dsdll_stability_demo.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/demos/dsdll_stability_demo.vi"/>
-					</Item>
-					<Item Name="dsdll.dll" Type="Document" URL="../drivers/dsdll/dsdll.dll"/>
-					<Item Name="dsdll_instance.ctl" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/dsdll_instance.ctl"/>
-					<Item Name="dsdll_device_record.ctl" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/dsdll_device_record.ctl"/>
-					<Item Name="dsdll_format.ctl" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/dsdll_format.ctl"/>
-					<Item Name="dsdll_sample_format.ctl" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/dsdll_sample_format.ctl"/>
-					<Item Name="dsdll_vi_tree.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/control/dsdll_vi_tree.vi"/>
-					<Item Name="COPYING" Type="Document" URL="../drivers/dsdll/COPYING"/>
-					<Item Name="COPYING.LESSER" Type="Document" URL="../drivers/dsdll/COPYING.LESSER"/>
-					<Item Name="NI_FileType.lvlib" Type="Library" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Utility/lvfile.llb/NI_FileType.lvlib"/>
-					<Item Name="NI_PackedLibraryUtility.lvlib" Type="Library" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Utility/LVLibp/NI_PackedLibraryUtility.lvlib"/>
-					<Item Name="Get File Extension.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Utility/libraryn.llb/Get File Extension.vi"/>
-					<Item Name="FileVersionInformation.ctl" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Platform/fileVersionInfo.llb/FileVersionInformation.ctl"/>
-					<Item Name="FixedFileInfo_Struct.ctl" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Platform/fileVersionInfo.llb/FixedFileInfo_Struct.ctl"/>
-					<Item Name="MoveMemory.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Platform/fileVersionInfo.llb/MoveMemory.vi"/>
-					<Item Name="Clear Errors.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Clear Errors.vi"/>
-					<Item Name="Error Cluster From Error Code.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Error Cluster From Error Code.vi"/>
-					<Item Name="Check if File or Folder Exists.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Utility/libraryn.llb/Check if File or Folder Exists.vi"/>
-					<Item Name="BuildErrorSource.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Platform/fileVersionInfo.llb/BuildErrorSource.vi"/>
-					<Item Name="GetFileVersionInfoSize.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Platform/fileVersionInfo.llb/GetFileVersionInfoSize.vi"/>
-					<Item Name="GetFileVersionInfo.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Platform/fileVersionInfo.llb/GetFileVersionInfo.vi"/>
-					<Item Name="VerQueryValue.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Platform/fileVersionInfo.llb/VerQueryValue.vi"/>
-					<Item Name="FileVersionInfo.vi" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/1abvi3w/vi.lib/Platform/fileVersionInfo.llb/FileVersionInfo.vi"/>
-				</Item>
 				<Item Name="DSDLL Virtual Digitizer.lvlib" Type="Library" URL="../drivers/dsdll/DSDLL Virtual Digitizer.lvlib"/>
 				<Item Name="dsdll.dll" Type="Document" URL="../dsdll.dll"/>
+				<Item Name="dsdll.lvlib" Type="Library" URL="../drivers/dsdll/dsdll source distribution/dsdll.lvlib"/>
 			</Item>
 			<Item Name="Simulated ADC" Type="Folder">
 				<Item Name="SimAdc Channel Cfg.ctl" Type="VI" URL="../drivers/simulated_adc/SimAdc Channel Cfg.ctl"/>
@@ -406,7 +334,7 @@
 					<Item Name="ex_CorrectErrorChain.vi" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/express/express shared/ex_CorrectErrorChain.vi"/>
 					<Item Name="Find Tag.vi" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Find Tag.vi"/>
 					<Item Name="Format Message String.vi" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Format Message String.vi"/>
-					<Item Name="General Error Handler CORE.vi" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/error.llb/General Error Handler CORE.vi"/>
+					<Item Name="General Error Handler Core CORE.vi" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/error.llb/General Error Handler Core CORE.vi"/>
 					<Item Name="General Error Handler.vi" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/error.llb/General Error Handler.vi"/>
 					<Item Name="Get String Text Bounds.vi" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Get String Text Bounds.vi"/>
 					<Item Name="Get Text Rect.vi" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/picture/picture.llb/Get Text Rect.vi"/>
@@ -417,6 +345,7 @@
 					<Item Name="Longest Line Length in Pixels.vi" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Longest Line Length in Pixels.vi"/>
 					<Item Name="LV Process library.lvlib" Type="Library" URL="../octave/golpi/GOLPI Library.lvlibp/LV Process source distribution/LV Process library.lvlib"/>
 					<Item Name="LVBoundsTypeDef.ctl" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/miscctls.llb/LVBoundsTypeDef.ctl"/>
+					<Item Name="LVRectTypeDef.ctl" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/miscctls.llb/LVRectTypeDef.ctl"/>
 					<Item Name="NI_FileType.lvlib" Type="Library" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/lvfile.llb/NI_FileType.lvlib"/>
 					<Item Name="NI_PackedLibraryUtility.lvlib" Type="Library" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/LVLibp/NI_PackedLibraryUtility.lvlib"/>
 					<Item Name="Not Found Dialog.vi" Type="VI" URL="../octave/golpi/GOLPI Library.lvlibp/1abvi3w/vi.lib/Utility/error.llb/Not Found Dialog.vi"/>
@@ -769,7 +698,6 @@
 				<Item Name="DialogType.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/DialogType.ctl"/>
 				<Item Name="General Error Handler.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/General Error Handler.vi"/>
 				<Item Name="DialogTypeEnum.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/DialogTypeEnum.ctl"/>
-				<Item Name="General Error Handler CORE.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/General Error Handler CORE.vi"/>
 				<Item Name="Check Special Tags.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/Check Special Tags.vi"/>
 				<Item Name="TagReturnType.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/TagReturnType.ctl"/>
 				<Item Name="Set String Value.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/Set String Value.vi"/>
@@ -866,7 +794,6 @@
 				<Item Name="Write BMP Data To Buffer.vi" Type="VI" URL="/&lt;vilib&gt;/picture/bmp.llb/Write BMP Data To Buffer.vi"/>
 				<Item Name="Calc Long Word Padded Width.vi" Type="VI" URL="/&lt;vilib&gt;/picture/bmp.llb/Calc Long Word Padded Width.vi"/>
 				<Item Name="Flip and Pad for Picture Control.vi" Type="VI" URL="/&lt;vilib&gt;/picture/bmp.llb/Flip and Pad for Picture Control.vi"/>
-				<Item Name="Color to RGB.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/colorconv.llb/Color to RGB.vi"/>
 				<Item Name="Get LV Class Default Value.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/LVClass/Get LV Class Default Value.vi"/>
 				<Item Name="Built App File Layout.vi" Type="VI" URL="/&lt;vilib&gt;/AppBuilder/Built App File Layout.vi"/>
 				<Item Name="NI_Excel.lvclass" Type="LVClass" URL="/&lt;vilib&gt;/Utility/NIReport.llb/Excel/NI_Excel.lvclass"/>
@@ -906,6 +833,8 @@
 				<Item Name="LVStringsAndValuesArrayTypeDef_U16.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVStringsAndValuesArrayTypeDef_U16.ctl"/>
 				<Item Name="LVRowAndColumnTypeDef.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVRowAndColumnTypeDef.ctl"/>
 				<Item Name="usereventprio.ctl" Type="VI" URL="/&lt;vilib&gt;/event_ctls.llb/usereventprio.ctl"/>
+				<Item Name="General Error Handler Core CORE.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/General Error Handler Core CORE.vi"/>
+				<Item Name="LVRectTypeDef.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVRectTypeDef.ctl"/>
 			</Item>
 			<Item Name="instr.lib" Type="Folder">
 				<Item Name="niScope Initialize.vi" Type="VI" URL="/&lt;instrlib&gt;/niScope/niScope Initialize.vi"/>
@@ -987,6 +916,8 @@
 			<Item Name="Advapi32.dll" Type="Document" URL="Advapi32.dll">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
+			<Item Name="dsdll_instance.ctl" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/dsdll_instance.ctl"/>
+			<Item Name="dsdll_device_record.ctl" Type="VI" URL="../drivers/dsdll/dsdll.lvlibp/dsdll_device_record.ctl"/>
 		</Item>
 		<Item Name="Build Specifications" Type="Build">
 			<Item Name="TWM - visa,niscope" Type="EXE">
