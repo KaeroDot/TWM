@@ -28,7 +28,7 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
 % (c) 2018-2020, Stanislav Maslan, smaslan@cmi.cz
 % The script is distributed under MIT license, https://opensource.org/licenses/MIT.                
 %
-    
+
     if ~exist(meas_file)
         error('QWTB algorithm executer: Selected session path does not exist!');
     end
@@ -182,7 +182,7 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
     end
     
     
-    % get list of QWTB algorithm parameter names 
+    % get list of QWTB algorithm parameter names
     parameter_names = infogettextmatrix(qinf, 'list of parameter names');
     
     % inputs of the algorithm
@@ -228,39 +228,22 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
   
 
     % --- identify input types of the algorithm
-    
     % QWTB algorithm input parameters
     q_inp = alginfo.inputs;
     
-    % is this single input algorithm?
-    is_single_inp = qwtb_find_parameter(q_inp,'y');
-    if ~is_single_inp
-        % no 'y' input - possibly algorithm with 'u' and 'i' inputs?
-        
-        if ~(qwtb_find_parameter(q_inp,'u') && qwtb_find_parameter(q_inp,'i'))
-            % not even that - error
-            error(sprintf('QWTB algorithm executer: the algorithm ''%s'' does not have supported inputs (must have ''y'', or ''u'' and ''i'' inputs)!',alg_id));
-        end
-      
-    end
-    
-    % check if there is timestep input?
-    is_time_vec = qwtb_find_parameter(q_inp,'Ts');
-    if ~is_time_vec
-        error(sprintf('QWTB algorithm executer: the algorithm ''%s'' does not have inputs ''Ts''!',alg_id));
-    end
-    
-    % algorithm supports differential inputs?
-    has_diff = qwtb_find_parameter(q_inp,'support_diff');
-    
-    % algorithm supports multiple waveform input?
-    has_multi = qwtb_find_parameter(q_inp,'support_multi_inputs');
+    % get waveforms input properties
+    % is_pair_inp       - pair inputs
+    % is_multich_inp    - multiple channels support
+    % mutich_inp_n      - multiple channels number
+    % is_time_vec       - timestamp support
+    % has_diff          - diff inputs support
+    % has_multi         - multiple waveforms support
+    [is_pair_inp, is_multich_inp, multich_inp_n, is_time_vec, has_diff, has_multi] = alg_find_wvfrm_inputs(q_inp, alg_id);
     
     % check compatibility:
     if proc_all && ~has_multi
         error(sprintf('QWTB algorithm executer: the algorithm ''%s'' cannot process multiple records at the time!',alg_id));
     end
-    
   
     % --- load record(s)
     
@@ -291,8 +274,7 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
         end 
     end
     
-
-    % --- set some specific parameters to the input quantities (common for entire digitizer): 
+    % --- set some specific parameters to the input quantities (common for entire digitizer):
     
     % store apertures (one for each repetition cycle):
     %  ###todo: aperture should be passed one by one for each sub-record 
@@ -346,8 +328,8 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
     end
   
     % -- for each sub-record:
+    % (if has_multi, this loop is done only once - all sub-records at once)
     for s = 1:subrec_list_count
-    
         % get file name of the record that is currently loaded (only fist one if multiple loaded)
         result_name = data.record_filenames{1};         
     
@@ -399,7 +381,7 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
         
         
   
-        if ~is_single_inp
+        if is_pair_inp              % paired input algorithm
             % dual input channel algorithm: we must have always paired 'u' and 'i' for each phase
             
             % store list of phases to the results file ('L1','L2',...)
@@ -546,7 +528,7 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
               
             end % for each phase
               
-        else  
+        else
             % --- SINGLE INPUT ALGORITHM ---
             
             % store list of channels to results file         
@@ -568,24 +550,21 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                     dig_pfx = {''};            
                 end         
             
-                % copy user parameters to the QWTB input quantities:
-                di = inputs;
-                
                 % store transducer type:
                 if strcmpi(tran.type,'divider')
-                    di.tr_type.v = 'rvd';
+                    dicell{p}.tr_type.v = 'rvd';
                 else
-                    di.tr_type.v = 'shunt';
+                    dicell{p}.tr_type.v = 'shunt';
                 end
                            
                 % store measurement time-stamps (one per record):
-                di.time_stamp.v =   tm_stamp(subrec_ids, tran.channels(1));
-                di.time_stamp.u = u_tm_stamp(subrec_ids, tran.channels(1));
+                dicell{p}.time_stamp.v =   tm_stamp(subrec_ids, tran.channels(1));
+                dicell{p}.time_stamp.u = u_tm_stamp(subrec_ids, tran.channels(1));
                 
                 % for differential mode store low-side channel timeshift:
                 if tran.is_diff
-                    di.time_shift_lo.v =  diff(tm_stamp(subrec_ids, tran.channels),[],2);
-                    di.time_shift_lo.u = sum(u_tm_stamp(subrec_ids, tran.channels).^2,2).^0.5; % uncertainty
+                    dicell{p}.time_shift_lo.v =  diff(tm_stamp(subrec_ids, tran.channels),[],2);
+                    dicell{p}.time_shift_lo.u = sum(u_tm_stamp(subrec_ids, tran.channels).^2,2).^0.5; % uncertainty
                     % ###note: summing high+low side unc. which is maybe not correct?
                 end
               
@@ -602,47 +581,62 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                     end
                     
                     % store range value:
-                    di = setfield(di,[pfx 'adc_nrng'],struct('v',data.ranges(c)));                
+                    dicell{p} = setfield(dicell{p},[pfx 'adc_nrng'],struct('v',data.ranges(c)));                
                    
                     % store waveform data:
                     % note stores all available repetitions, one column per repetition:
-                    di = setfield(di, d_pfx, struct('v', reshape(data.y(:, tran.channels(c), subrec_ids), [size(data.y,1) numel(subrec_ids)])));               
+                    dicell{p} = setfield(dicell{p}, d_pfx, struct('v', reshape(data.y(:, tran.channels(c), subrec_ids), [size(data.y,1) numel(subrec_ids)])));               
                     
                     % store channel corrections:
-                    di = qwtb_alg_insert_corrs(di, data.corr.dig.chn{tran.channels(c)}, dig_pfx{c});
+                    dicell{p} = qwtb_alg_insert_corrs(dicell{p}, data.corr.dig.chn{tran.channels(c)}, dig_pfx{c});
                 
                 end
                 
                 % store transducer corrections:
-                di = qwtb_alg_insert_corrs(di,tran,'');
+                dicell{p} = qwtb_alg_insert_corrs(dicell{p},tran,'');
                 
                 % store global digitizer corrections:
-                di = qwtb_alg_insert_corrs(di,data.corr.dig,'');     
+                dicell{p} = qwtb_alg_insert_corrs(dicell{p}, data.corr.dig,'');     
                 
                 if ~strcmpi(calcset.unc,'none')
                     % generates fake uncertainty vectors complementary to the data:
-                    di = qwtb_add_unc(di,alginfo.inputs); % ###TODO: remove when QWTB can ignore missing uncertainty
+                    dicell{p} = qwtb_add_unc(dicell{p}, alginfo.inputs); % ###TODO: remove when QWTB can ignore missing uncertainty
                 end
-                
-                % execute algorithm
-                dout = qwtb(alg_id,di,calcset);
-                
-                % discard uncertainties if unc. disabled:
-                if strcmpi(unc_mode,'none')
-                    dout = qwtb_rem_unc(dout);    
-                end
-                
-                % store current channel phase setup info (index; U, I tag)
-                phase_info.index = data.corr.phase_idx(p);
-                phase_info.tags = channels(p);
-                phase_info.section = channels{p};
-                
-                % store results to the result file
-                qwtb_store_results(result_path, dout, alginfo, phase_info);
-            
             end % for each phase (transducer)
-          
-        end % if ~is_single_inp (algorithms inputs mode)
+            if is_multich_inp
+                % add suffixes with number of ch to all datainputs
+                for p = 1:numel(data.corr.tran)
+                    dicell{p} = quantities_add_suffix(dicell{p}, num2str(p));
+                end % for each phase (transducer)
+                % merge dicell{p} into single structure and execute qwtb - algorithm with all data
+                dout = qwtb(alg_id, catstruct(dicell{:}, inputs), calcset);
+                % XXX this vvvv part is not yet correct:
+                phase_info.index = data.corr.phase_idx(1);
+                phase_info.tags = channels(1);
+                phase_info.section = channels{1};
+                % XXX this ^^^^ part is not yet correct:
+                qwtb_store_results(result_path, dout, alginfo, phase_info);
+            else % no multichannel input, process data per parts:
+                for p = 1:numel(data.corr.tran)
+                    % execute qwtb
+                    % execute algorithm
+                    dout = qwtb(alg_id, catstruct(dicell{p}, inputs), calcset);
+                    
+                    % discard uncertainties if unc. disabled:
+                    if strcmpi(unc_mode,'none')
+                        dout = qwtb_rem_unc(dout);    
+                    end
+                    
+                    % store current channel phase setup info (index; U, I tag)
+                    phase_info.index = data.corr.phase_idx(p);
+                    phase_info.tags = channels(p);
+                    phase_info.section = channels{p};
+                    
+                    % store results to the result file
+                    qwtb_store_results(result_path, dout, alginfo, phase_info);
+                end % for each phase (transducer)
+            end % if is_multich_inp
+        end % if is_pair_inp (algorithms inputs mode)
         
                
                       
@@ -868,3 +862,92 @@ function [din] = qwtb_rem_unc(din)
         end        
     end    
 end
+
+function [is_pair_inp, is_multich_inp, multich_inp_n, is_time_vec, has_diff, has_multi] = alg_find_wvfrm_inputs(q_inp, alg_id)
+% Function determines waveform inputs of the algorithm
+% Possibilities:
+%   y                       this is not pair_inp, not multich_inp
+%   u, i                    this is     pair_inp, not multich_inp
+%   y1, y2, ...             this is not pair_inp,     multich_inp
+%   u1, i1, u1, u2, ...     this is     pair_inp,     multich_inp
+% Inputs:
+%   q_inp - result of alginfo.inputs
+%   alg_id - algorithm id
+% Outputs:
+%   pair_inp > 0 - algorithm requires input pairs of voltage, current
+%   multich_inp > 0 - algorithm requires multiple channels (phases) as input
+%   multich_inp_n - number of multiple channels inputs (y1..yn)
+%   is_time_vec       - timestamp support
+%   has_diff          - diff inputs support
+%   has_multi         - multiple waveforms support
+
+    % get inputs
+    is_u = qwtb_find_parameter(q_inp, 'u');
+    is_u1 = qwtb_find_parameter(q_inp, 'u1');
+    is_i = qwtb_find_parameter(q_inp, 'i');
+    is_i1 = qwtb_find_parameter(q_inp, 'i1');
+    is_y = qwtb_find_parameter(q_inp, 'y');
+    is_y1 = qwtb_find_parameter(q_inp, 'y1');
+
+    % check if at least one possible combination is available
+    if is_y1
+        is_pair_inp = 0;
+        is_multich_inp = 1;
+    elseif is_u1 & is_i1
+        is_pair_inp = 1;
+        is_multich_inp = 1;
+    elseif is_y
+        is_pair_inp = 0;
+        is_multich_inp = 0;
+    elseif is_u & is_i
+        is_pair_inp = 1;
+        is_multich_inp = 0;
+    else
+        % incorrect waveform inputs
+        template = ['QWTB algorithm executer: the algorithm ''%s'' does not have supported ' ...
+                    'inputs. Must have (y1) or (u1,i1) or (y) or (u,i) inputs)!'];
+        error(sprintf(template,alg_id));
+    end
+
+    if is_multich_inp
+        % find out multich_inp_n
+        if is_pair_inp
+            quantity = 'u';
+        else
+            quantity = 'y';
+        end % if is_pair_inp
+        multich_inp_n = 100;
+        for k = 2:100 % no more than 100 phases now possible. fixed for loop to prevent infinite do loop
+            found = qwtb_find_parameter(q_inp, sprintf('%s%d', quantity, k));
+            if ~found
+                multich_inp_n = k - 1;
+                break
+            end
+        end % for k
+    end % if is_multich_inp
+
+    % check if there is timestep input?
+    is_time_vec = qwtb_find_parameter(q_inp,'Ts');
+    if ~is_time_vec
+        error(sprintf('QWTB algorithm executer: the algorithm ''%s'' does not have inputs ''Ts''!',alg_id));
+    end
+    
+    % algorithm supports differential inputs?
+    has_diff = qwtb_find_parameter(q_inp,'support_diff');
+    
+    % algorithm supports multiple waveform input?
+    has_multi = qwtb_find_parameter(q_inp,'support_multi_inputs');
+    
+end % function
+
+function [diout] = quantities_add_suffix(di, suffix)
+% adds suffix to name of all quantities in datain structure di
+% used for enumerate quantities by channel numbers 1,2,...
+% i.e. 'di.Q.v' renames to 'di.Qsuffix.v' etc.
+    diout = struct();
+    Qnames = fieldnames(di);
+    for k = 1:numel(Qnames)
+        dif = getfield(di, Qnames{k});
+        diout = setfield(diout, [Qnames{k} suffix], dif);
+    end % for
+end % function [di] = quantities_add_suffix(di, suffix)
