@@ -15,7 +15,7 @@ for k = 1:6
         if strcmpi(Qnames{l}(end-numlen+1 : end), numstr)
             Qnamenew = Qnames{l}(1:end-numlen);
             datain = setfield(datain, Qnamenew, getfield(datainoriginal, Qnames{l}));
-        elseif isempty(str2num(supposednumber))
+        elseif isnan(round(str2double(supposednumber)))
             datain = setfield(datain, Qnames{l}, getfield(datainoriginal, Qnames{l}));
         end
     end
