@@ -393,7 +393,9 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
             rinf = infosettextmatrix(rinf, 'list', list);    
             infosave(rinf, result_path);
             
-            tags = {};
+            % initialize cell for tags
+            % it will be cell of cells: {{u1}{i1}, {u2}{i2},...}
+            tags = cell(numel(phases),1);
             
             % --- for each unique phase:
             for p = 1:numel(phases)
@@ -430,7 +432,10 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                     % ok, we have found transducer...
                     
                     % add phase-channel name to list:
-                    tags{end+1} = [pchn_pfx int2str(cid)];
+                    % (on 3 lines because of matlab)
+                    tmp = tags{p};
+                    tmp{end+1} = [pchn_pfx int2str(p)];
+                    tags{p} = tmp;
                     
                     % transducer:
                     tran = data.corr.tran{cid};
@@ -536,8 +541,9 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                     end
                     
                     % store current channel phase setup info (index; U, I tag)
-                    phase_info.index = data.corr.phase_idx(p);
-                    phase_info.tags = tags;
+                    % (we can assign p directly because phases are ordered thanks to previous loop)
+                    phase_info.index = p;
+                    phase_info.tags = tags{p};
                     phase_info.section = list{p};
                     
                     % store results to the result file
