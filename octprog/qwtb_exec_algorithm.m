@@ -58,6 +58,7 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
     try
         % load the file:
         % XXX if info is not in path, this try-catch results in incorrect warning
+        % XXX if some error in info file, this try-catch results in incorrect warning
         qinf_txt = infoload(qwtb_file);
         qinf = infoparse(qinf_txt);
         % try to get the content section:
@@ -390,7 +391,10 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
             for p = 1:numel(phases)
                 list{p} = sprintf('L%d',phases(p));
             end     
+            % XXX this vvvv part is not yet correct for the case of multich_inp:
+            % L1, L2, L3 is probably not the best list
             rinf = infosettextmatrix(rinf, 'list', list);    
+            % XXX this ^^^^ part is not yet correct:
             infosave(rinf, result_path);
             
             % initialize cell for tags
@@ -524,11 +528,10 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                 end % for each phase (transducer)
                 % merge dicell{p} into single structure and execute qwtb - algorithm with all data
                 dout = qwtb(alg_id, catstruct(dicell{:}, inputs), calcset);
-                % XXX this vvvv part is not yet correct:
                 phase_info.index = data.corr.phase_idx(1);
-                phase_info.tags = channels(1);
-                phase_info.section = channels{1};
-                % XXX this ^^^^ part is not yet correct:
+                phase_info.tags = {strjoin([tags{:}], ', ')};
+                phase_info.section = 'joint';
+                keyboard
                 qwtb_store_results(result_path, dout, alginfo, phase_info);
             else % no multichannel input, process data per parts:
                 for p = 1:numel(phases)
@@ -555,7 +558,9 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
             % --- SINGLE INPUT ALGORITHM ---
             
             % store list of channels to results file         
+            % u1, i1, u2, i2, u3, i3 is probably not the best list
             rinf = infosettextmatrix(rinf, 'list', channels);
+            % XXX this ^^^^ part is not yet correct:
             infosave(rinf, result_path);
             
             % --- for each available transducer:
