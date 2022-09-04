@@ -990,7 +990,11 @@ function datain = check_gen_datain(alginfo, datain, calcset) %<<<1
             % Q.v: %<<<4
             % check that maximal number of non trailing non singleton dimensions is 2:
             if ndims(Q.v) > 2
-                error(err_msg_gen(65, Qname)); % .v too many dimensions!
+                % generation of .c, .d is not implemented for matrices with more
+                % than 2 dimensions. 3+ dimensional matrices are not tested and
+                % something can be broken.
+                msg = ['Value matrix of quantity `' Qname '` has too many dimensions. QWTB can misbehave.'];
+                warning(msg); % .v too many dimensions!
             end
             % Q.u: %<<<4
             if ~( strcmpi(calcset.unc, 'none') )
@@ -1591,7 +1595,8 @@ function msg = err_msg_gen(varargin) %<<<1
             case 64 % one input - Qname
                 msg = ['Field `r` (randomized uncertainties) is missing in quantity `' varargin{2} '`, automatic randomization is disabled but MCM uncertainty calculation is required. Please read QWTB documentation.'];
             case 65 % one input - Qname
-                msg = ['Value matrix of quantity `' varargin{2} '` has too many dimensions. Please read QWTB documentation.'];
+                % This error has been changed to warning.
+                % msg = ['Value matrix of quantity `' varargin{2} '` has too many dimensions. Please read QWTB documentation.'];
             case 66 % one input - Qname
                 msg = ['Dimensions of uncertainty matrix do not match dimensions of value matrix of quantity `' varargin{2} '`. Please read QWTB documentation.'];
             case 67 % one input - Qname
