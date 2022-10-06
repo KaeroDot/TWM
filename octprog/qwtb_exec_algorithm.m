@@ -541,7 +541,7 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                 diC{p} = di;
             end % for each phase
               
-        else
+        elseif not(support_all_phase)
             % --- SINGLE INPUT ALGORITHM ---
             
             % store list of channels to results file         
@@ -622,7 +622,78 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                 % store input data into cell:
                 diC{p} = di;
             end % for each phase (transducer)
-          
+        else
+            % algorithm supports all phases at once, just put everything into cells
+            % make sampled data:
+            % store list of channels to results file         
+            rinf = infosettextmatrix(rinf, 'list', channels);
+            infosave(rinf, result_path);
+            % copy user parameters to the QWTB input quantities:
+            di = inputs;
+            % --- for max of transducers/digitizer channels
+            for p = 1:max(data.adc_channels_count, numel(data.corr.tran))
+                if p <= numel(data.corr.tran)
+                    % get transducer:
+                    tran = data.corr.tran{p};
+                    % generate assigned channel prefixes:
+                    if tran.is_diff % XXX this will be removed or not?
+                        % differential connection:
+                        dig_pfx = {'';'lo'};            
+                    else
+                        % single-ended connection:
+                        dig_pfx = {''};            
+                    end         
+                    % store transducer type:
+                    if strcmpi(tran.type,'divider')
+                        di.tr_type.v = 'rvd';
+                    else
+                        di.tr_type.v = 'shunt';
+                    end
+                    % store transducer corrections:
+                    di = qwtb_alg_insert_corrs(di,tran,'');
+                    % save for case of no more transducers but still left digitizer channels:
+                    last_tran = di;
+                end % if p <= numel(data.corr.tran)
+                % now add digitizer
+                if p <= data.adc_channels_count
+                    % store measurement time-stamps (one per record):
+                    di.time_stamp.v =   tm_stamp(subrec_ids, tran.channels(1));
+                    di.time_stamp.u = u_tm_stamp(subrec_ids, tran.channels(1));
+                    % for differential mode store low-side channel timeshift:
+                    if tran.is_diff
+                        di.time_shift_lo.v =  diff(tm_stamp(subrec_ids, tran.channels),[],2);
+                        di.time_shift_lo.u = sum(u_tm_stamp(subrec_ids, tran.channels).^2,2).^0.5; % uncertainty
+                        % ###note: summing high+low side unc. which is maybe not correct?
+                    end
+                    % waveform data quantity name: % XXX no lo, do not now how to solve it:
+                    pfx = ''; % dig_pfx{c};
+                    d_pfx = 'y';
+                    if ~isempty(pfx)                    
+                        d_pfx = [d_pfx '_' pfx];
+                        pfx = [pfx '_'];                
+                    end
+                    % store range value:
+                    di = setfield(di,[pfx 'adc_nrng'],struct('v',data.ranges(p)));                
+                    % store waveform data:
+                    % note stores all available repetitions, one column per repetition:
+                    di = setfield(di, d_pfx, struct('v', reshape(data.y(:, tran.channels(p), subrec_ids), [size(data.y,1) numel(subrec_ids)])));               
+                    % store channel corrections:
+                    di = qwtb_alg_insert_corrs(di, data.corr.dig.chn{tran.channels(p)}, '');
+                    % store global digitizer corrections:
+                    di = qwtb_alg_insert_corrs(di,data.corr.dig,'');     
+                end
+
+                if ~strcmpi(calcset.unc,'none')
+                    % generates fake uncertainty vectors complementary to the data:
+                    di = qwtb_add_unc(di,alginfo.inputs); % ###TODO: remove when QWTB can ignore missing uncertainty
+                end
+                % add missing fields (if missing)
+                if p > 1
+                    di = add_missing_fields(di, diC{1}); % suppose first datain got all needed fields, because at least one transducer and at least one digitizer
+                end
+                % store input data into cell:
+                diC{p} = di;
+            end % for each phase (transducer)
         end % if ~is_single_chan (algorithm inputs mode - number of channels)
 
         % --- call QWTB
@@ -913,8 +984,11 @@ Qparams = {[alginfo.inputs].name}(ids);
 for q = 1:numel(Qs)
     Q = Qs{q};
     if any(strcmp(Q, Qparams))
-        % If Q is parameter type, only take value from the first cell:
-        din.(Q).v = diC{1}.(Q).v;
+        % If Q is parameter type, concatenate all values into a cells, because
+        % parameter can take any values inside.
+        for c = 1:numel(diC)
+            din.(Q).v{c} = diC{c}.(Q).v;
+        end
     else
         % Q is not of parameter type, concatenate values together.
         % For every field of quantity Q:
@@ -965,9 +1039,10 @@ for q = 1:numel(Qs)
                         for d = 1:numel(Fsizes{c})
                             S.subs{d} = 1:Fsizes{c}(d);
                         end
-                        S.subs{end} = c
+                        S.subs{end} = c;
                         O = subsasgn(O, S, Fc{c});
                     end
+                    din.(Q).(F) = O;
                 end % if all(Fsizesmat(1, :) == Fsizesmat(:, :), 1)
             else
                 % Number of dimensions is different for matrices in cells for
@@ -978,4 +1053,18 @@ for q = 1:numel(Qs)
     end % if any(strcmp(Q, Qparams))
 end % for q = 1:numel(Qs)
 
-end % function [din] = cells_to_matrices(diC)
+end % function [din] = cells_to_matrices(diC, alginfo)
+
+function di = add_missing_fields(di, template)
+    templateQns = fieldnames(template);
+    diQns = fieldnames(di);
+    missing = setdiff(templateQns, diQns);
+    for q = 1:numel(missing)
+        Q = missing{q};
+        Fns = fieldnames(template.(Q));
+        for f = 1:numel(Fns)
+            F = Fns{f};
+            di.(Q).(F) = NaN;
+        end % for f = 1:numel(Fns)
+    end % for q = 1:numel(missing)
+end % function di = add_missing_fields(di, template)
