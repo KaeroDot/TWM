@@ -489,9 +489,10 @@ function [data] = tpq_load_record(header, group_id, repetition_id,data_ofs,data_
         tr_chn = tr_chn + (mpx_map(t) - 1)*data.adc_channels_count;
                 
         % check valid range of the digitizer channels:
-        if any(tr_chn > data.channels_count) || any(tr_chn == 0)
-            error(sprintf('TWM measurement loader: Some of the assigned digitizer indexes for channel #%d is out of range of available digitizer channels in matrix ''transducer to digitizer channels mapping''!',t));
-        end
+        % XXX commented only for testing!!!: 
+        % if any(tr_chn > data.channels_count) || any(tr_chn == 0)
+            % error(sprintf('TWM measurement loader: Some of the assigned digitizer indexes for channel #%d is out of range of available digitizer channels in matrix ''transducer to digitizer channels mapping''!',t));
+        % end
                 
         % store the channel list for this transducer:
         corr.tran{t}.channels = tr_chn;

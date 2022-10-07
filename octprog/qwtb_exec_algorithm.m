@@ -676,9 +676,9 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                     di = setfield(di,[pfx 'adc_nrng'],struct('v',data.ranges(p)));                
                     % store waveform data:
                     % note stores all available repetitions, one column per repetition:
-                    di = setfield(di, d_pfx, struct('v', reshape(data.y(:, tran.channels(p), subrec_ids), [size(data.y,1) numel(subrec_ids)])));               
+                    di = setfield(di, d_pfx, struct('v', reshape(data.y(:, p, subrec_ids), [size(data.y,1) numel(subrec_ids)])));               
                     % store channel corrections:
-                    di = qwtb_alg_insert_corrs(di, data.corr.dig.chn{tran.channels(p)}, '');
+                    di = qwtb_alg_insert_corrs(di, data.corr.dig.chn{p}, '');
                     % store global digitizer corrections:
                     di = qwtb_alg_insert_corrs(di,data.corr.dig,'');     
                 end
