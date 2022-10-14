@@ -1,0 +1,39 @@
+% correction type
+type:: digitizer
+
+% description of the digitizer corrections setup
+name:: Correcctions for six channels of dummy signal generator, with ideal properties.
+
+% names of the channels as they appear in the digitizer identification
+#startmatrix:: channel identifiers
+  Simulated ADC, channel 1
+  Simulated ADC, channel 2
+  Simulated ADC, channel 3
+  Simulated ADC, channel 4
+  Simulated ADC, channel 5
+  Simulated ADC, channel 6
+#endmatrix:: channel identifiers
+
+% links to the channel corrections of particular channels
+#startmatrix:: channel correction paths
+  chn1\Simulated_ADC.info
+  chn2\Simulated_ADC.info
+  chn3\Simulated_ADC.info
+  chn4\Simulated_ADC.info
+  chn5\Simulated_ADC.info
+  chn6\Simulated_ADC.info
+#endmatrix:: channel correction paths
+
+% timeshift between the channels [s]
+% note the first is always zero
+#startsection:: interchannel timeshift
+
+  % row vector of values, one for each channel
+  #startmatrix:: value
+    0; 0; 0; 0; 0; 0
+  #endmatrix:: value 
+  #startmatrix:: uncertainty
+    0; 0; 0; 0; 0; 0
+  #endmatrix:: uncertainty 
+
+#endsection:: interchannel timeshift
