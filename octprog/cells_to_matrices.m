@@ -96,5 +96,8 @@ for q = 1:numel(Qs)
     end % if any(strcmp(Q, Qparams))
 end % for q = 1:numel(Qs)
 
+din.cells_to_matrices.v = numel(diC);
+din.cells_to_matrices.par = 1;
+
 end % function [din] = cells_to_matrices(diC, alginfo)
 

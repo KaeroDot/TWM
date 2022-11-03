@@ -719,7 +719,7 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                     doC{p} = qwtb_rem_unc(doC{p});    
                 end
                 % algorithm supplied phase informations
-                if isfield(dout, 'phase_info_index') & isfield(dout, 'phase_info_tags') & isfield(dout, 'phase_info_section')
+                if isfield(dout, 'phase_info_index') && isfield(dout, 'phase_info_tags') && isfield(dout, 'phase_info_section')
                     phase_info{p}.index = doC{p}.phase_info_index.v;
                     phase_info{p}.tags = {doC{p}.phase_info_tags.v};
                     phase_info{p}.section = doC{p}.phase_info_section.v;
