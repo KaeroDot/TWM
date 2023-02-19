@@ -755,8 +755,8 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                     
                     % store current channel phase setup info (index; U, I tag)
                     phase_info.index = data.corr.phase_idx(p);
-                    phase_info.tags = tags{p};
-                    phase_info.section = list{p};
+                    phase_info.tags = channels(p);
+                    phase_info.section = channels{p};
                     
                     % store results to the result file
                     qwtb_store_results(result_path, dout, alginfo, phase_info);
