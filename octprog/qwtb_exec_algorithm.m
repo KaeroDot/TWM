@@ -541,7 +541,8 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                     % generates fake uncertainty vectors complementary to the data:
                     di = qwtb_add_unc(di,alginfo.inputs); % ###TODO: remove when QWTB can ignore missing uncertainty
                 end            
-                           
+                % add data folder used by some algorithms:
+                di = add_data_folder_quantity(di, meas_root);
                 % store input data into cell:
                 diC{p} = di;
             end % for each phase
@@ -624,6 +625,8 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                     di = qwtb_add_unc(di,alginfo.inputs); % ###TODO: remove when QWTB can ignore missing uncertainty
                 end
                            
+                % add data folder used by some algorithms:
+                di = add_data_folder_quantity(di, meas_root);
                 % store input data into cell:
                 diC{p} = di;
             end % for each phase (transducer)
@@ -692,6 +695,8 @@ function [] = qwtb_exec_algorithm(meas_file, calc_unc, is_last_avg, avg_id, grou
                 if p > 1
                     di = add_missing_fields(di, diC{1}); % suppose first datain got all needed fields, because at least one transducer and at least one digitizer
                 end
+                % add data folder used by some algorithms:
+                di = add_data_folder_quantity(di, meas_root);
                 % store input data into cell:
                 diC{p} = di;
             end % for each phase (transducer)
@@ -998,4 +1003,12 @@ function di = add_missing_fields(di, template)
         end % for f = 1:numel(Fns)
     end % for q = 1:numel(missing)
 end % function di = add_missing_fields(di, template)
+
+function di = add_data_folder_quantity(di, meas_root)
+% Adds quantity named data_folder to datain, so algorithm does now where to
+% store auxiliary files or plots. Adds only if quantity does not yet exist.
+    if not(isfield('data_folder', di))
+        di.data_folder.v = meas_root;
+    end
+end % function di = add_data_folder_quantity(di, meas_root)
 
